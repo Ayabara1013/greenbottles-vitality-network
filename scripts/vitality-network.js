@@ -79,9 +79,7 @@ Hooks.on('createChatMessage', async (message) => {
 						
 						try {
 							// Try updating with the original actor reference
-							const result = await actor.update({
-								"system.resources.vitalityNetwork.value": newValue
-							});
+							const result = await actor.updateResource('vitalityNetwork', newValue)
 							console.log("Update result:", result);
 							console.log("Actor resource after update:", actor.system.resources.vitalityNetwork.value);
 							
@@ -90,7 +88,9 @@ Hooks.on('createChatMessage', async (message) => {
 							console.error("Update failed:", error);
 							ui.notifications.error("Failed to update Vitality Network points!");
 						}
-					}
+						}
+						
+						console.log('5')
 				}
         },
         cancel: {
