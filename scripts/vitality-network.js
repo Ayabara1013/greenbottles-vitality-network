@@ -1,20 +1,29 @@
 const rollHealing = async (actor, points) => {
-	// const roll = await new Roll(points).evaluate({async: true});
-	// await roll.toMessage();
+  const damageRoll = CONFIG.Dice.rolls.find(r => r.name === "DamageRoll");
+  const roll = await new damageRoll(`${points}[healing]`).evaluate();
+  
+  const message = await roll.toMessage({
+    speaker: ChatMessage.getSpeaker({ actor: actor }),
+    flavor: "Vitality Network - Transfer Vitality"
+  });
 
-	const roll = new Roll(String(points) + "[healing]");
-	await roll.evaluate();
-
-
-
-	await roll.toMessage({
-		speaker: ChatMessage.getSpeaker({ actor: actor }),
-		flavour: "Vitality Network - Transfer Vitality"
-	});
+  // Use pf2e-toolbelt Target Helper to apply healing
+  const targets = Array.from(game.user.targets);
+  
+  if (targets.length > 0 && game.modules.get('pf2e-toolbelt')?.active) {
+    Hooks.call('pf2e-toolbelt.target-helper.damage-received', {
+      message: message,
+      targets: targets.map(t => t.document),
+      roll: roll
+    });
+  } else if (targets.length === 0) {
+    ui.notifications.warn('Please target at least one token to heal.');
+  } else if (!game.modules.get('pf2e-toolbelt')?.active) {
+    ui.notifications.warn('pf2e-toolbelt module is required for automatic healing application.');
+  }
 }
 
-
-
+// #region hooks
 // Register settings when the module initializes
 Hooks.once('init', () => {
   console.log("Greenbottle's Vitality Network | Initializing");
@@ -38,6 +47,42 @@ Hooks.once('ready', () => {
   console.log("Greenbottle's Vitality Network | Ready");
   ui.notifications.info("Greenbottle's Vitality Network | Ready");
 });
+
+Hooks.on('combatTurn', (combat, updateData, updateOptions) => {
+	const currentCombatant = combat.combatant;
+
+	if (currentCombatant?.isOwner || currentCombatant?.actor?.hasPlayerOwner) {
+		console.log(`player turn started for ${currentCombatant.name}`);
+
+		let player = currentCombatant.actor;
+
+		if (player) {
+			let level = player.level;
+			let playerClass = player.class.name;
+			let vitalityNetwork = player.system.resources.vitalityNetwork;
+
+			let newValue = 0;
+			if (level >= 19) {
+				newValue = vitalityNetwork.value += 8;
+			}
+			else if (level >= 15) {
+				newValue = vitalityNetwork.value += 6;
+			}
+			else {
+				newValue = vitalityNetwork.value += 4;
+			}
+
+			if (newValue > vitalityNetwork.max) {
+				newValue = vitalityNetwork.max;
+			}
+
+			// let newValue = player.system.resources.vitalityNetwork.value += 1;
+			player.updateResource('vitalityNetwork', newValue)
+			
+			console.log(player.system.resources.vitalityNetwork.value);
+		}
+	}
+})
 
 Hooks.on('createChatMessage', async (message) => {
   const item = message.item;
