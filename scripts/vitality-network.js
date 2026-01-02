@@ -8,17 +8,14 @@ Hooks.once('ready', () => {
 });
 
 Hooks.on('createChatMessage', async (message) => {
-
-	console.log("Chat message hook fired!");
+  console.log("Chat message hook fired!");
   const item = message.item;
   console.log("Item:", item);
   console.log("Item slug:", item?.slug);
 
-  // const item = message.item;
-
   // detect transfer vitality action
-	if (item?.slug === 'transfer-vitality') {
-		console.log("Transfer Vitality detected!");
+  if (item?.slug === 'transfer-vitality') {
+    console.log("Transfer Vitality detected!");
     const actor = message.actor;
 
     // get vitality network resource
@@ -36,10 +33,6 @@ Hooks.on('createChatMessage', async (message) => {
       ui.notifications.warn('You have no Vitality Network points remaining!');
       return;
     }
-
-    // const createVitalityNetworkDialog = (currentPoints, maxPoints) => {
-    //   return ;
-    // };
 
     // show dialog
     new Dialog({
@@ -70,28 +63,46 @@ Hooks.on('createChatMessage', async (message) => {
           icon: '<i class="fas fa-check"></i>',
           label: "Spend",
           callback: async (html) => {
-					const points = parseInt(html.find('[name="points"]').val());
-					console.log("Points to spend:", points);
-					
-					if (points > 0 && points <= currentPoints) {
-						const newValue = currentPoints - points;
-						console.log("New value will be:", newValue);
-						
-						try {
-							// Try updating with the original actor reference
-							const result = await actor.updateResource('vitalityNetwork', newValue)
-							console.log("Update result:", result);
-							console.log("Actor resource after update:", actor.system.resources.vitalityNetwork.value);
-							
-							ui.notifications.info(`Spent ${points} Vitality Network points. ${newValue} remaining.`);
-						} catch (error) {
-							console.error("Update failed:", error);
-							ui.notifications.error("Failed to update Vitality Network points!");
-						}
-						}
-						
-						console.log('5')
-				}
+            const points = parseInt(html.find('[name="points"]').val());
+            console.log("Points to spend:", points);
+            
+            if (points > 0 && points <= currentPoints) {
+              const newValue = currentPoints - points;
+              console.log("New value will be:", newValue);
+              
+              try {
+                // Update the resource
+                await actor.updateResource('vitalityNetwork', newValue);
+                console.log("Update result:");
+                console.log("Actor resource after update:", actor.system.resources.vitalityNetwork.value);
+                
+                // Show notification
+                ui.notifications.info(`Spent ${points} Vitality Network points. ${newValue} remaining.`);
+                
+                // Send chat message
+                await ChatMessage.create({
+                  user: game.user.id,
+                  speaker: ChatMessage.getSpeaker({actor: actor}),
+                  content: `
+                    <div class="pf2e chat-card">
+                      <header class="card-header flexrow">
+                        <img src="${actor.img}" width="36" height="36"/>
+                        <h3>Vitality Network</h3>
+                      </header>
+                      <div class="card-content">
+                        <p><strong>${actor.name}</strong> spent <strong>${points}</strong> Vitality Network points.</p>
+                        <p>Remaining: <strong>${newValue}</strong> / ${maxPoints}</p>
+                      </div>
+                    </div>
+                  `
+                });
+                
+              } catch (error) {
+                console.error("Update failed:", error);
+                ui.notifications.error("Failed to update Vitality Network points!");
+              }
+            }
+          }
         },
         cancel: {
           icon: '<i class="fas fa-times"></i>',
