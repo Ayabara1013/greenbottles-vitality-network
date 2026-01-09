@@ -18,6 +18,10 @@ When a character with vitality network points uses the Transfer Vitality action,
 3. Deducts the spent points from the character's resources
 4. Applies healing to targeted allies (with pf2e-toolbelt integration)
 
+## Authour Notes
+
+1. there are some slight/ occasional issues with the dialog popup, if you are having those issues, switch to the chat message version (in settings)
+
 ## Installation
 
 ### Via Foundry Package Manager (Recommended)
