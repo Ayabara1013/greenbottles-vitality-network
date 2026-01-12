@@ -1,81 +1,97 @@
-# Greenbottle's Hacking Quips
+# Greenbottle's Vitality Network
 
-A Foundry VTT module that adds witty programming and hacking-related error messages to failed Computers skill checks in Starfinder 2e (using Pathfinder 2e system).
+A Foundry VTT module that automates vitality network point spending for Starfinder 2e Transfer Vitality actions (using Pathfinder 2e system).
 
 ## Features
 
-- **20 Programming-Related Quips**: Displays random error messages when hacking attempts fail
-- **GM Controls**: Adds interactive buttons for GMs to determine success/failure on skill checks without pre-set DCs
-- **Automatic Detection**: Triggers on Computers skill checks or any check with "hacking" in the description
-- **Player Feedback**: Failed attempts show humorous messages to keep the mood light
+- **Automatic Detection**: Triggers when a character uses the Transfer Vitality action
+- **Customizable Interface**: Choose between popup dialog or chat-based interaction
+- **Resource Management**: Automatically tracks and spends vitality network points
+- **pf2e-toolbelt Integration**: Automatically applies healing when the toolbelt module is enabled
+- **User Preferences**: Individual settings for interface style and automation level
 
-## Sample Quips
+## How It Works
 
-- "Your exploit crashes with a segmentation fault. Time to debug."
-- "Stack overflow! No, not the website – your actual intrusion buffer just exploded."
-- "The system returns 'Permission Denied' in 47 different languages simultaneously."
-- "You divided by zero. Somewhere, a mathematician is crying, and the firewall is laughing."
+When a character with vitality network points uses the Transfer Vitality action, the module:
+1. Detects the action automatically
+2. Prompts the user (via popup or chat) to spend vitality network points
+3. Deducts the spent points from the character's resources
+4. Applies healing to targeted allies (with pf2e-toolbelt integration)
+
+## Authour Notes
+
+1. there are some slight/ occasional issues with the dialog popup, if you are having those issues, switch to the chat message version (in settings)
 
 ## Installation
 
 ### Via Foundry Package Manager (Recommended)
-
 1. In Foundry VTT, go to **Add-on Modules**
 2. Click **Install Module**
-3. Search for "Greenbottle's Hacking Quips"
+3. Search for "Greenbottle's Vitality Network"
 4. Click **Install**
 
 ### Manual Installation
-
 1. In Foundry VTT, go to **Add-on Modules**
 2. Click **Install Module**
 3. Paste this manifest URL:
 ```
-   https://github.com/Ayabara1013/greenbottles-hacking-quips/releases/latest/download/module.json
+https://github.com/Ayabara1013/greenbottles-vitality-network/releases/latest/download/module.json
 ```
 4. Click **Install**
 
 ## Usage
 
-### For GMs
-
+### Setup
 1. Enable the module in your world
-2. When a player makes a Computers skill check **without a pre-set DC**, GM adjudication buttons will appear below the roll
-3. Click the appropriate result button (Critical Success, Success, Failure, or Critical Failure)
-4. If the result is a failure, a random quip will be displayed to the player
+2. Ensure characters have the vitality network resource configured
+3. (Optional) Enable pf2e-toolbelt for automatic healing application
 
 ### For Players
+1. Configure your preferred interface style in module settings (popup or chat)
+2. When you use Transfer Vitality, the module will automatically prompt you
+3. Select how many vitality network points to spend
+4. The module handles the rest!
 
-When your hacking check fails, you'll see a humorous programming-related error message in chat. Don't worry - it's all in good fun!
+### For GMs
+The module works automatically once enabled. No additional configuration required unless you want to customize default settings for players.
 
 ## Requirements
 
 - **Foundry VTT**: Version 13
 - **Game System**: Pathfinder 2e
+- **Required**: pf2e-toolbelt module
 - **Recommended**: Starfinder Anachronism module (for Starfinder 2e content)
 
 ## Compatibility
 
 - Foundry VTT v13
-- Pathfinder 2e system
+- Pathfinder 2e system v6.0.0+
 - Works with Starfinder 2e via Starfinder Anachronism module
+- Integrates with pf2e-toolbelt for automatic healing
 
 ## Credits
 
 **Author**: Doc_ (Greenbottle)  
-**Repository**: [GitHub](https://github.com/Ayabara1013/greenbottles-hacking-quips)
+**Repository**: [GitHub](https://github.com/Ayabara1013/greenbottles-vitality-network)
 
-Special thanks to the Foundry VTT and Pathfinder 2e communities!
+Special thanks to the Foundry VTT, Pathfinder 2e, and Starfinder communities!
 
 ## Changelog
 
 ### v1.0.0 - Initial Release
-- 20 programming-related quips for failed hacking checks
-- GM adjudication controls for skill checks without DCs
-- Automatic detection of Computers skill checks
+- Automatic detection of Transfer Vitality actions
+- Popup and chat-based interface options
+- Vitality network point tracking and spending
+- pf2e-toolbelt integration for automatic healing application
+- User preference settings for interface customization
 
+### v1.0.1 - corrected popup version
+- Automatic detection of Transfer Vitality actions
+- Popup and chat-based interface options
+- Vitality network point tracking and spending
+- pf2e-toolbelt integration for automatic healing application
+- User preference settings for interface customization
 
-### v1.1.0 - settings n' stuff
-- added some options so there are actually settings to change (hiding success buttons, merging failure buttons)
-- the "disable failure button" feature works, but doesn't grey out the button yet
-- there MAY be working detection of checks with included DCs
+## License
+
+This module is licensed under the MIT License.

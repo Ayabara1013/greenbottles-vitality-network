@@ -1,10 +1,13 @@
 const rollHealing = async (actor, points) => {
   const damageRoll = CONFIG.Dice.rolls.find(r => r.name === "DamageRoll");
   const roll = await new damageRoll(`${points}[healing]`).evaluate();
+  // const roll = await new damageRoll(`${actor.name} ${points}[healing]`).evaluate();
+
+  console.log(actor);
   
   const message = await roll.toMessage({
     speaker: ChatMessage.getSpeaker({ actor: actor }),
-    flavor: "Vitality Network - Transfer Vitality"
+    flavor: `Vitality Network - Transfer Vitality`
   });
 
   // Use pf2e-toolbelt Target Helper to apply healing
@@ -19,7 +22,7 @@ const rollHealing = async (actor, points) => {
   } else if (targets.length === 0) {
     ui.notifications.warn('Please target at least one token to heal.');
   } else if (!game.modules.get('pf2e-toolbelt')?.active) {
-    ui.notifications.warn('pf2e-toolbelt module is required for automatic healing application.');
+    ui.notifications.warn('pf2e-toolbelt module is required for automated healing application.');
   }
 }
 
@@ -39,7 +42,7 @@ Hooks.once('init', () => {
       'popup': 'Popup Dialog',
       'chat': 'Chat Message'
     },
-    default: 'popup'
+    default: 'chat'
   });
 });
 
@@ -49,30 +52,38 @@ Hooks.once('ready', () => {
 });
 
 Hooks.on('combatTurn', (combat, updateData, updateOptions) => {
-	const currentCombatant = combat.combatant;
+  const currentCombatant = combat.combatant;
+  
+  // ui.notifications.info("on combat turn hook -- 1");
 
 	if (currentCombatant?.isOwner || currentCombatant?.actor?.hasPlayerOwner) {
 		console.log(`player turn started for ${currentCombatant.name}`);
 
-		let player = currentCombatant.actor;
+    let player = currentCombatant.actor;
+    
+    // ui.notifications.info("on combat turn hook -- 2 - inside if ");
 
 		if (player) {
 			let level = player.level;
 			let playerClass = player.class.name;
 			let vitalityNetwork = player.system.resources.vitalityNetwork;
 
-			let newValue = 0;
-			if (level >= 19) {
-				newValue = vitalityNetwork.value += 8;
+			let newValue = vitalityNetwork.value;
+      if (level >= 19) {
+        // ui.notifications.info("on combat turn hook -- 3 - >= 19");
+				newValue += 8;
 			}
-			else if (level >= 15) {
-				newValue = vitalityNetwork.value += 6;
+      else if (level >= 15) {
+        // ui.notifications.info("on combat turn hook -- 3 - >= 15");
+				newValue += 6;
 			}
-			else {
-				newValue = vitalityNetwork.value += 4;
+      else {
+        // ui.notifications.info("on combat turn hook -- 3 - >= 1");
+				newValue += 4;
 			}
 
-			if (newValue > vitalityNetwork.max) {
+      if (newValue > vitalityNetwork.max) {
+        // ui.notifications.info("on combat turn hook -- 3d - new value > network max");
 				newValue = vitalityNetwork.max;
 			}
 
@@ -84,7 +95,7 @@ Hooks.on('combatTurn', (combat, updateData, updateOptions) => {
 	}
 })
 
-Hooks.on('createChatMessage', async (message) => {
+Hooks.on('createChatMessage', async (message, options, userId) => {
   const item = message.item;
 
   if (item?.slug === 'transfer-vitality') {
@@ -144,7 +155,8 @@ Hooks.on('createChatMessage', async (message) => {
           'greenbottles-vitality-network': {
             interactive: true
           }
-        }
+        },
+        // whisper: actorOwners.map(u => u.id),
       });
 		}
 		// #region popup dialog
@@ -179,14 +191,18 @@ Hooks.on('createChatMessage', async (message) => {
             label: "Spend",
             callback: async (html) => {
               const points = parseInt(html.find('[name="points"]').val());
+
+              // ui.notifications.info("attempting to update vitality network -- p1");
               
               if (points > 0 && points <= currentPoints) {
                 const newValue = currentPoints - points;
                 
+                // ui.notifications.info("attempting to update vitality network -- p2");
+
                 try {
                   await actor.updateResource('vitalityNetwork', newValue);
                   
-                  ui.notifications.info(`Spent ${points} Vitality Network points. ${newValue} remaining.`);
+                  ui.notifications.info(`Spent ${points} Vitality Network points. ${newValue} remaining. -- p3a`);
                   
                   await ChatMessage.create({
                     user: game.user.id,
@@ -204,7 +220,9 @@ Hooks.on('createChatMessage', async (message) => {
                       </div>
                     `
                   });
-                  
+
+                  await rollHealing(actor, points);
+
                 } catch (error) {
                   console.error("Update failed:", error);
                   ui.notifications.error("Failed to update Vitality Network points!");
@@ -233,10 +251,14 @@ Hooks.on('renderChatMessage', (message, html) => {
     const points = parseInt(input.value);
     const currentPoints = parseInt(input.dataset.current);
     const maxPoints = parseInt(input.dataset.max);
+
+    // ui.notifications.info("attempting to update vitality network -- c1");
     
     if (points > 0 && points <= currentPoints) {
       const actor = game.actors.get(actorId);
       const newValue = currentPoints - points;
+      
+      // ui.notifications.info("attempting to update vitality network -- c2");
       
       try {
         await actor.updateResource('vitalityNetwork', newValue);
