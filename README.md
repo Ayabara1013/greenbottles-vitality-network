@@ -2,6 +2,8 @@
 
 A Foundry VTT module that automates vitality network point spending for Starfinder 2e Transfer Vitality actions (using Pathfinder 2e system).
 
+If you are enough of a madlad that you want to support me, [I set up a patreon where you can get access to all the early stuff I'm working on and more!](https://www.patreon.com/cw/GreenbottlesArcanum) < thats a link, click it. \**insert fry futurama money meme*\* 
+
 ## Features
 
 - **Automatic Detection**: Triggers when a character uses the Transfer Vitality action
