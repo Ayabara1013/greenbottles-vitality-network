@@ -128,6 +128,28 @@ Hooks.on('createChatMessage', async (message, options, userId) => {
 
   if (item?.slug === 'transfer-vitality') {
     const actor = message.actor;
+    
+    // TEST LOGGING - Remove after verification
+    console.log('=== TRANSFER VITALITY DETECTED ===');
+    console.log('Actor using Transfer Vitality:', actor.name);
+    console.log('Actor ID:', actor.id);
+    console.log('User ID who triggered the action:', userId);
+    console.log('Current user ID:', game.user.id);
+    console.log('Current user name:', game.user.name);
+    console.log('Current user\'s assigned character:', game.user.character?.name || 'None');
+    console.log('Current user\'s assigned character ID:', game.user.character?.id || 'None');
+    console.log('Does assigned character match?', game.user.character?.id === actor.id ? 'YES - WILL SHOW PROMPT' : 'NO - WILL NOT SHOW PROMPT');
+    console.log('All connected users:', game.users.map(u => `${u.name} (${u.id}${u.character ? ' - plays: ' + u.character.name : ''})`));
+    console.log('=====================================');
+    
+    // Only show the dialog/chat card to the user who has this character assigned
+    if (game.user.character?.id !== actor.id) {
+      console.log(`Skipping prompt for ${game.user.name} - this character is not assigned to them`);
+      return;
+    }
+    
+    console.log(`Showing prompt to ${game.user.name} - this character is assigned to them`);
+    
     const vitalityResource = actor.system.resources?.vitalityNetwork;
 
     if (!vitalityResource) {
@@ -150,7 +172,8 @@ Hooks.on('createChatMessage', async (message, options, userId) => {
     if (dialogStyle === 'chat') {
       await ChatMessage.create({
         user: game.user.id,
-        speaker: ChatMessage.getSpeaker({actor: actor}),
+        speaker: ChatMessage.getSpeaker({ actor: actor }),
+        whisper: [game.user.id],
         content: `
           <div class="pf2e chat-card vitality-network-card">
             <header class="card-header flexrow">
