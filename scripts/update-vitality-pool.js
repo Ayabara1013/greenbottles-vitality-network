@@ -17,7 +17,13 @@ export function updateVitalityPool(currentCombatant) {
 		if (player) {
 			let level = player.level;
 			let playerClass = player.class.name;
-			let vitalityNetwork = player.system.resources.vitalityNetwork;
+      let vitalityNetwork = player.system.resources.vitalityNetwork;
+      // Skip if this character doesn't have a vitality network resource
+      if (!vitalityNetwork) {
+        console.log(`${player.name} does not have a vitalityNetwork resource - skipping`);
+        return;
+      }
+
       let oldValue = vitalityNetwork.value;
 
 			let newValue = vitalityNetwork.value;
