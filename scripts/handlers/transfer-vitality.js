@@ -51,6 +51,7 @@ export function registerTransferVitalityHooks() {
       // Get the user's preference
       const dialogStyle = game.settings.get('greenbottles-vitality-network', 'dialogStyle');
 
+      // #region chat card
       // Chat card style
       if (dialogStyle === 'chat') {
         await ChatMessage.create({
@@ -92,6 +93,9 @@ export function registerTransferVitalityHooks() {
           }
         });
       }
+      // #endregion
+      
+      // #region popup
       // Popup dialog style
       else {
         new Dialog({
@@ -200,7 +204,9 @@ export function registerTransferVitalityHooks() {
       }
     }
   });
+  // #endregion
 
+  // #region button clicks
   // Handle chat card button clicks
   Hooks.on('renderChatMessage', (message, html) => {
     html.find('.spend-vitality-btn').click(async (event) => {
