@@ -89,6 +89,13 @@ Special thanks to the Foundry VTT, Pathfinder 2e, and Starfinder communities!
 - pf2e-toolbelt integration for automatic healing application
 - User preference settings for interface customization
 
+### v1.0.1 - corrected popup version
+- Automatic detection of Transfer Vitality actions
+- Popup and chat-based interface options
+- Vitality network point tracking and spending
+- pf2e-toolbelt integration for automatic healing application
+- User preference settings for interface customization
+
 ## License
 
 This module is licensed under the MIT License.

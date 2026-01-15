@@ -1,13 +1,13 @@
 {
   "id": "greenbottles-vitality-network",
   "title": "Greenbottle's Vitality Network",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
   },
   "esmodules": [
-    "scripts/vitality-network.js"
+    "scripts/main.js"
   ],
   "styles": [
     {
