@@ -49,4 +49,18 @@ export function registerSettings() {
     },
     default: 'owner'
   });
+
+  // Style for vitality network update notifications
+  game.settings.register('greenbottles-vitality-network', 'updateNotificationStyle', {
+    name: 'Update Notification Style',
+    hint: 'Choose how vitality network restoration notifications appear.',
+    scope: 'world',      // GM sets this for everyone
+    config: true,
+    type: String,
+    choices: {
+      'ui': 'UI Notification (top right)',
+      'chat': 'Chat Message'
+    },
+    default: 'ui'
+  });
 }

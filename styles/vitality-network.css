@@ -1,0 +1,18 @@
+/* Style the entire chat message */
+.vitality-network-message {
+  /* --chat-message-background: #9AC9AC; */
+  /* border-color: #527560; */
+}
+
+.vitality-network-message .message-content { 
+  /* border-top: 2px solid #eb469e; */
+  /* border-top: none; */
+}
+
+.chat-card{
+  /* border-top: 2px solid #4683eb; */
+}
+.card-header {
+  /* border-top: 2px solid #eb8b46; */
+}
+

@@ -21,10 +21,15 @@ Hooks.once('init', () => {
 Hooks.once('ready', () => {
   console.log("Greenbottle's Vitality Network | Ready");
   ui.notifications.info("Greenbottle's Vitality Network | Ready");
-  
+  // console.clear();
   // Register combat hooks
   registerCombatHooks();
   
   // Register transfer vitality hooks
   registerTransferVitalityHooks();
 });
+
+
+
+
+
