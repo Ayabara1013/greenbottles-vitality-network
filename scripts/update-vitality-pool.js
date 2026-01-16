@@ -17,13 +17,14 @@ export function updateVitalityPool(currentCombatant) {
 		if (player) {
 			let level = player.level;
 			let playerClass = player.class.name;
-      let vitalityNetwork = player.system.resources.vitalityNetwork;
+			let vitalityNetwork = player.system.resources?.vitalityNetwork;
+      
       // Skip if this character doesn't have a vitality network resource
       if (!vitalityNetwork) {
         console.log(`${player.name} does not have a vitalityNetwork resource - skipping`);
         return;
       }
-
+      
       let oldValue = vitalityNetwork.value;
 
 			let newValue = vitalityNetwork.value;
@@ -65,7 +66,55 @@ export function updateVitalityPool(currentCombatant) {
                           (showUpdates === 'owner-gm' && (currentCombatant.isOwner || game.user.isGM));
         
         if (shouldShow) {
-          ui.notifications.info(`${player.name} regained ${actualGained} Vitality Network points (${newValue}/${vitalityNetwork.max})`);
+          const notificationStyle = game.settings.get('greenbottles-vitality-network', 'updateNotificationStyle');
+          const message = `${player.name} regained ${actualGained} Vitality Network points (${newValue}/${vitalityNetwork.max})`;
+          
+          if (notificationStyle === 'chat') {
+            // Send as chat message
+            let whisperTo = null;
+            const gmUsers = game.users.filter(u => u.isGM).map(u => u.id);
+            const actorOwners = game.users.filter(u => player.testUserPermission(u, "OWNER")).map(u => u.id);
+            
+            // Determine whisper based on showUpdates setting
+            switch (showUpdates) {
+              case 'owner':
+                whisperTo = actorOwners;
+                break;
+              case 'gm':
+                whisperTo = gmUsers;
+                break;
+              case 'owner-gm':
+                whisperTo = [...new Set([...actorOwners, ...gmUsers])];
+                break;
+              case 'all':
+              default:
+                whisperTo = null; // Public
+                break;
+            }
+            
+            const messageData = {
+              user: game.user.id,
+              speaker: ChatMessage.getSpeaker({ actor: player }),
+              content: `<div class="pf2e chat-card vitality-network-card">
+                <header class="card-header flexrow">
+                  <img src="${player.img}" width="36" height="36"/>
+                  <h3>Vitality Network Restored</h3>
+                </header>
+                <div class="card-content">
+                  <p>${message}</p>
+                </div>
+              </div>`
+            };
+            
+            if (whisperTo) {
+              messageData.whisper = whisperTo;
+            }
+            
+            ChatMessage.create(messageData);
+          } else {
+            // Show as UI notification (default)
+            ui.notifications.info(message);
+          }
         }
       }
 		}
