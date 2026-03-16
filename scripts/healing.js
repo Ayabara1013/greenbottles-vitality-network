@@ -1,6 +1,17 @@
 /**
- * Roll healing and apply it to targets using pf2e-toolbelt
- * Respects visibility settings for who can see the roll
+ * healing.js — Greenbottle's Vitality Network
+ *
+ * Rolls a PF2e healing damage roll (e.g. "3[healing]") and applies the result
+ * to any currently targeted tokens using pf2e-toolbelt's Target Helper hook.
+ *
+ * How it works:
+ *   1. Reads the 'showSpending' setting to decide who sees the roll in chat.
+ *   2. Creates a DamageRoll using PF2e's roll class (CONFIG.Dice.rolls).
+ *   3. Posts the roll to chat (whispered if needed).
+ *   4. Calls `pf2e-toolbelt.target-helper.damage-received` so pf2e-toolbelt
+ *      automatically applies the healing to all targeted tokens.
+ *
+ * Called from: transfer-vitality.js after the player confirms how many points to spend.
  */
 export async function rollHealing(actor, points) {
   const showSpending = game.settings.get('greenbottles-vitality-network', 'showSpending');
@@ -53,8 +64,6 @@ export async function rollHealing(actor, points) {
   const damageRoll = CONFIG.Dice.rolls.find(r => r.name === "DamageRoll");
   const roll = await new damageRoll(`${points}[healing]`).evaluate();
 
-  console.log(actor);
-  
   const messageData = {
     speaker: ChatMessage.getSpeaker({ actor: actor }),
     flavor: `Vitality Network - Transfer Vitality`
