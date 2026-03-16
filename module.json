@@ -38,6 +38,30 @@
       "folders": []
     }
   ],
+  "packs": [
+    {
+      "name": "vitality-macros",
+      "label": "Vitality Network Macros",
+      "path": "packs/vitality-macros",
+      "type": "Macro"
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "Greenbottle's Toolbelt",
+      "sorting": "a",
+      "color": "#0f7652",
+      "packs": ["vitality-macros"]
+    }
+  ],
+  "relationships": {
+    "requires": [
+      {
+        "id": "greenbottles-toolbelt",
+        "type": "module"
+      }
+    ]
+  },
   "authors": [
     {
       "name": "Doc_",
