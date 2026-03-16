@@ -28,6 +28,14 @@
       "packs": ["vitality-macros"]
     }
   ],
+  "relationships": {
+    "requires": [
+      {
+        "id": "greenbottles-toolbelt",
+        "type": "module"
+      }
+    ]
+  },
   "authors": [
     {
       "name": "Doc_",
