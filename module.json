@@ -1,16 +1,42 @@
 {
   "id": "greenbottles-vitality-network",
   "title": "Greenbottle's Vitality Network",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "compatibility": {
     "minimum": "13",
     "verified": "13"
   },
   "esmodules": [
-    "scripts/vitality-network.js"
+    "scripts/main.js"
   ],
   "styles": [
-    "styles/vitality-network.css"
+    {
+      "src": "styles/vitality-network.css"
+    }
+  ],
+  "packs": [
+    {
+      "name": "greenbottles-vitality-network-macros",
+      "label": "Greenbottle's Vitality Network - Macros",
+      "path": "packs/greenbottles-vitality-network-macros",
+      "type": "Macro",
+      "system": "pf2e",
+      "ownership": {
+        "PLAYER": "OBSERVER",
+        "ASSISTANT": "OWNER"
+      }
+    }
+  ],
+  "packFolders": [
+    {
+      "name": "Greenbottle's Toolbelt",
+      "sorting": "a",
+      "color": "#0f7652",
+      "packs": [
+        "greenbottles-vitality-network-macros"
+      ],
+      "folders": []
+    }
   ],
   "packs": [
     {
@@ -39,13 +65,34 @@
   "authors": [
     {
       "name": "Doc_",
-      "url": "https://github.com/Ayabara1013"
+      "url": "https://github.com/Ayabara1013",
+      "flags": {}
     }
   ],
-  "description": "Manages vitality network healing mechanics for Starfinder 2e.",
+  "description": "<p>Automates vitality network point spending for Starfinder 2e Transfer Vitality actions. Provides customizable popup and chat-based interfaces with pf2e-toolbelt integration for automatic healing application.</p>",
   "url": "https://github.com/Ayabara1013/greenbottles-vitality-network",
   "manifest": "https://github.com/Ayabara1013/greenbottles-vitality-network/releases/latest/download/module.json",
   "download": "https://github.com/Ayabara1013/greenbottles-vitality-network/releases/latest/download/module.zip",
   "bugs": "https://github.com/Ayabara1013/greenbottles-vitality-network/issues",
-  "changelog": "https://github.com/Ayabara1013/greenbottles-vitality-network/releases"
+  "changelog": "https://github.com/Ayabara1013/greenbottles-vitality-network/releases",
+  "flags": {
+    "canUpload": true
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "pf2e",
+        "type": "system",
+        "compatibility": {
+          "minimum": "6.0.0"
+        }
+      }
+    ],
+    "requires": [
+      {
+        "id": "pf2e-toolbelt",
+        "type": "module"
+      }
+    ]
+  }
 }
